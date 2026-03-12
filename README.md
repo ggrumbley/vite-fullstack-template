@@ -1,7 +1,3 @@
-This `README.md` is designed to be the "source of truth" for your new project. It covers the workspace architecture, the pnpm workflow, and the modern tech stack you've built.
-
----
-
 # 🚀 Modern PERN Stack Template (Vite + Express + Postgres)
 
 Welcome to your high-performance, full-stack development environment! This project uses a **pnpm workspace** to manage a React frontend and a Node.js backend with shared speed and efficiency. ⚡️
@@ -30,7 +26,6 @@ my-toy-app/
 ├── .gitignore        # 🛡 Keeps your secrets safe
 ├── pnpm-workspace.yaml # 🔗 Links the apps together
 └── package.json      # 🕹 Root scripts to run everything
-
 ```
 
 ---
@@ -43,7 +38,6 @@ Make sure you have [pnpm](https://pnpm.io/installation) installed globally:
 
 ```bash
 npm install -g pnpm
-
 ```
 
 ### 2. Installation
@@ -52,7 +46,6 @@ Install all dependencies for both the frontend and backend with a single command
 
 ```bash
 pnpm install
-
 ```
 
 ### 3. Environment Setup
@@ -61,7 +54,6 @@ Copy the sample environment file and fill in your local details:
 
 ```bash
 cp packages/server/.env.sample packages/server/.env
-
 ```
 
 ### 4. Run the Dev Server
@@ -70,7 +62,6 @@ Start your engines! This will launch the Vite frontend and the Express backend s
 
 ```bash
 pnpm dev
-
 ```
 
 * **Frontend:** `http://localhost:5173`
@@ -93,7 +84,6 @@ We use **Vitest** for a unified testing experience.
 ```bash
 # Run server tests
 pnpm test
-
 ```
 
 ---
