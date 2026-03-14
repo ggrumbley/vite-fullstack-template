@@ -4,11 +4,11 @@
     "module": "NodeNext",           // Crucial for "type": "module"
     "moduleResolution": "NodeNext", // Crucial for "type": "module"
     "verbatimModuleSyntax": true,   // Keeps imports clean
-    "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
   "include": ["src/**/*"]
 }
