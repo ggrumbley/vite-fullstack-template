@@ -12,7 +12,11 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:seed": "tsx src/db/seed.ts",
+    "db:reset": "pnpm db:migrate && pnpm db:seed"
   },
   "keywords": [],
   "author": "Gary Grumbley <ggrumbley@gmail.com>",
