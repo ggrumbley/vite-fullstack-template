@@ -83,7 +83,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['*.config.js', '*.config.ts'],
+    files: ['**/*.config.{js,ts,mjs,cjs}'],
     ...tseslint.configs.disableTypeChecked,
   },
   prettierConfig,

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import { fetchPosts } from './posts.api.ts';
 
 interface Post {

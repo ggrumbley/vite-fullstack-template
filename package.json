@@ -7,6 +7,7 @@
     "dev:client": "pnpm --filter client dev",
     "dev:server": "pnpm --filter server dev",
     "dev": "concurrently --kill-others --names \"CLIENT,SERVER\" --prefix-colors \"cyan,magenta\" \"pnpm dev:client\" \"pnpm dev:server\"",
+    "build": "pnpm --filter client build & pnpm --filter server build",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

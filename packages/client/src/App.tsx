@@ -1,7 +1,6 @@
-import './App.css';
-import { PostList } from './features/posts/PostList.component';
-import { ConnectionStatus } from './components/ConnectionStatus.component';
 import reactLogo from './assets/react.svg';
+import { ConnectionStatus } from './components/ConnectionStatus.component';
+import { PostList } from './features/posts/PostList.component';
 
 function App() {
   return (
@@ -9,9 +8,9 @@ function App() {
       {/* 1. Navbar / Header area */}
       <header className="navbar bg-base-100 px-4 shadow-md lg:px-8">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl font-bold tracking-tight">
+          <span className="btn btn-ghost text-xl font-bold tracking-tight">
             Fullstack <span className="text-primary">Vite</span>
-          </a>
+          </span>
         </div>
         <div className="flex-none">
           <button className="btn btn-square btn-ghost">
