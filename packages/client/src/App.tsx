@@ -1,6 +1,7 @@
 import './App.css';
 import { PostList } from './features/posts/PostList.component';
 import { ConnectionStatus } from './components/ConnectionStatus.component';
+import reactLogo from './assets/react.svg';
 
 function App() {
   return (
@@ -35,9 +36,18 @@ function App() {
       <main className="container mx-auto max-w-6xl px-4 py-12">
         {/* 3. Hero / Title Section */}
         <section className="mb-16 text-center">
-          <h1 className="mb-4 text-5xl font-extrabold tracking-tight">
-            Vite Client <span className="text-secondary">Starter Page</span>
-          </h1>
+          <div className="mb-4 flex items-center justify-center gap-4">
+            <a href="https://react.dev" target="_blank" rel="noreferrer">
+              <img
+                src={reactLogo}
+                className="h-12 w-12 animate-[spin_8s_linear_infinite] drop-shadow-[0_0_15px_rgba(97,218,251,0.5)]"
+                alt="React logo"
+              />
+            </a>
+            <h1 className="text-5xl font-extrabold tracking-tight">
+              Vite Client <span className="text-secondary">Starter Page</span>
+            </h1>
+          </div>
           <p className="mx-auto max-w-2xl text-lg opacity-70">
             A template featuring local Postgres, Drizzle ORM, and a DaisyUI-powered React frontend.
           </p>
