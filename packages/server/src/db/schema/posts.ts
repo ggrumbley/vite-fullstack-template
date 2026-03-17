@@ -1,4 +1,5 @@
 import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+
 import { users } from './users.ts';
 
 export const posts = pgTable('posts', {

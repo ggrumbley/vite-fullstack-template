@@ -1,86 +1,78 @@
-import React from 'react';
 import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
-
-interface HealthResponse {
-  status: string;
-  proxy: string;
-  uptime: number;
-  message: string;
-}
+import { ConnectionStatus } from './components/ConnectionStatus.component';
+import { PostList } from './features/posts/PostList.component';
 
 function App() {
-  const [data, setData] = React.useState<HealthResponse | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    // Note: No 'http://localhost:5001' needed because of the Vite proxy
-    fetch('/api/health')
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then((data: HealthResponse) => setData(data))
-      .catch((err) => setError(err.message));
-  }, []);
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <div
-          style={{
-            padding: '40px',
-            fontFamily: 'sans-serif',
-          }}
-        >
-          <h1>Proxy Check</h1>
-
-          <div
-            style={{
-              padding: '20px',
-              borderRadius: '8px',
-              border: `1px solid ${error ? '#ffa39e' : '#b7eb8f'}`,
-            }}
-          >
-            {error ? (
-              <p style={{ color: '#cf1322' }}>
-                ❌ <strong>Error:</strong> {error}
-              </p>
-            ) : data ? (
-              <>
-                <p>
-                  ✅ <strong>Proxy Status:</strong> {data.proxy}
-                </p>
-                <p>
-                  🚀 <strong>Message:</strong> {data.message}
-                </p>
-                <p>
-                  ⏱️ <strong>Uptime:</strong> {Math.floor(data.uptime)} seconds
-                </p>
-              </>
-            ) : (
-              <p>⏳ Loading health check...</p>
-            )}
-          </div>
+    <div className="bg-base-200 min-h-screen" data-theme="cupcake">
+      {/* 1. Navbar / Header area */}
+      <header className="navbar bg-base-100 px-4 shadow-md lg:px-8">
+        <div className="flex-1">
+          <span className="btn btn-ghost text-xl font-bold tracking-tight">
+            Fullstack <span className="text-primary">Vite</span>
+          </span>
         </div>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+        <div className="flex-none">
+          <button className="btn btn-square btn-ghost">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block h-5 w-5 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      {/* 2. Main Page Container */}
+      <main className="container mx-auto max-w-6xl px-4 py-12">
+        {/* 3. Hero / Title Section */}
+        <section className="mb-16 text-center">
+          <div className="mb-4 flex items-center justify-center gap-4">
+            <a href="https://react.dev" target="_blank" rel="noreferrer">
+              <img
+                src={reactLogo}
+                className="h-12 w-12 animate-[spin_8s_linear_infinite] drop-shadow-[0_0_15px_rgba(97,218,251,0.5)]"
+                alt="React logo"
+              />
+            </a>
+            <h1 className="text-5xl font-extrabold tracking-tight">
+              Vite Client <span className="text-secondary">Starter Page</span>
+            </h1>
+          </div>
+          <p className="mx-auto max-w-2xl text-lg opacity-70">
+            A template featuring local Postgres, Drizzle ORM, and a DaisyUI-powered React frontend.
+          </p>
+          <div className="divider mx-auto mt-8 w-24"></div>
+        </section>
+
+        {/* 4. The Content Area */}
+        <section>
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Latest Posts</h2>
+            <button className="btn btn-primary btn-sm md:btn-md">+ New Post</button>
+          </div>
+
+          <PostList />
+        </section>
+      </main>
+
+      <footer className="footer footer-center bg-base-100 text-base-content border-base-200 mt-20 border-t p-10">
+        <aside className="flex flex-col items-center gap-4">
+          <ConnectionStatus />
+          <p className="text-xs opacity-50">
+            Fullstack Vite Starter &bull; {new Date().getFullYear()}
+          </p>
+        </aside>
+      </footer>
+    </div>
   );
 }
 

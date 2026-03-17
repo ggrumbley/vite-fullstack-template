@@ -1,4 +1,5 @@
-import { eq, count, asc, getTableColumns } from 'drizzle-orm';
+import { asc, count, eq, getTableColumns } from 'drizzle-orm';
+
 import { db } from '../db/db.ts';
 import { posts } from '../db/schema/posts.ts';
 import { users } from '../db/schema/users.ts';

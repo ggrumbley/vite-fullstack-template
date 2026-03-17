@@ -1,8 +1,10 @@
-import express from 'express';
 import 'dotenv/config';
-import userRoutes from './routes/user.routes.ts';
-import postRoutes from './routes/post.routes.ts';
+
+import express from 'express';
+
 import { checkHealth } from './controllers/health.controller.ts';
+import postRoutes from './routes/post.routes.ts';
+import userRoutes from './routes/user.routes.ts';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
