@@ -1,4 +1,5 @@
 import 'dotenv/config';
+
 import { db } from './db.ts';
 import { posts } from './schema/posts.ts';
 import { users } from './schema/users.ts';

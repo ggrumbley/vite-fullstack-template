@@ -1,4 +1,5 @@
-import { eq, desc } from 'drizzle-orm';
+import { desc,eq } from 'drizzle-orm';
+
 import { db } from '../db/db.ts';
 import { posts } from '../db/schema/posts.ts';
 import { users } from '../db/schema/users.ts';

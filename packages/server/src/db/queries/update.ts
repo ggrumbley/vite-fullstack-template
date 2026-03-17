@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
+
 import { db } from '../db.ts';
-import { type SelectPost, posts } from '../schema/posts.ts';
+import { posts,type SelectPost } from '../schema/posts.ts';
 
 export async function updatePost(
   id: SelectPost['id'],
