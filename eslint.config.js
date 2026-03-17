@@ -9,6 +9,16 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
+  {
+    // 1. GLOBAL SETTINGS: This is the critical block
+    // It sets the anchor point for the entire project
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
   // 1. Global Ignores (Must be the first object)
   {
     ignores: ['**/dist/**', '**/migrations/**', '**/node_modules/**'],
@@ -38,7 +48,8 @@ export default tseslint.config(
     },
     languageOptions: {
       parserOptions: {
-        ecmaFeatures: { jsx: true },
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     settings: {
@@ -71,7 +82,9 @@ export default tseslint.config(
       'drizzle/enforce-delete-with-where': 'off',
     },
   },
-
-  // 5. Prettier (Always last to override formatting)
+  {
+    files: ['*.config.js', '*.config.ts'],
+    ...tseslint.configs.disableTypeChecked,
+  },
   prettierConfig,
 );
