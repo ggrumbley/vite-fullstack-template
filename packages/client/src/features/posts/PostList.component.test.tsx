@@ -3,8 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('./posts.api.ts');
 
-import * as postsApi from './posts.api.ts';
 import { PostList } from './PostList.component.tsx';
+import * as postsApi from './posts.api.ts';
 
 const mockPosts = [
   { id: 1, title: 'First Post', content: 'Hello world', author: 'Alice', createdAt: '' },

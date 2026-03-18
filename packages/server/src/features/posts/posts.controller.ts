@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 
-import { handler } from '../../lib/handler.ts';
 import { HttpError } from '../../lib/errors.ts';
+import { handler } from '../../lib/handler.ts';
 import { CreatePostDto, UpdatePostDto } from './posts.dto.ts';
 import * as postService from './posts.service.ts';
 
