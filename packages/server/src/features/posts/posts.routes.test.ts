@@ -79,15 +79,22 @@ describe('POST /api/posts', () => {
     expect(res.body).toMatchObject({ title: 'Test Post' });
   });
 
-  it('returns 400 when service throws', async () => {
-    vi.mocked(postService.createPost).mockRejectedValue(new Error('Validation failed'));
+  it('returns 422 when body fails validation', async () => {
+    const res = await request(app).post('/api/posts').send({ title: '' });
+
+    expect(res.status).toBe(422);
+    expect(res.body).toHaveProperty('errors');
+  });
+
+  it('returns 500 when service throws', async () => {
+    vi.mocked(postService.createPost).mockRejectedValue(new Error('DB error'));
 
     const res = await request(app)
       .post('/api/posts')
-      .send({ title: '', content: '', userId: 1 });
+      .send({ title: 'Test Post', content: 'Test content', userId: 1 });
 
-    expect(res.status).toBe(400);
-    expect(res.body).toMatchObject({ error: 'Validation failed' });
+    expect(res.status).toBe(500);
+    expect(res.body).toMatchObject({ error: 'DB error' });
   });
 });
 
@@ -109,6 +116,13 @@ describe('PATCH /api/posts/:id', () => {
 
     expect(res.status).toBe(404);
     expect(res.body).toMatchObject({ error: 'Post not found' });
+  });
+
+  it('returns 422 when body fails validation', async () => {
+    const res = await request(app).patch('/api/posts/1').send({ title: '' });
+
+    expect(res.status).toBe(422);
+    expect(res.body).toHaveProperty('errors');
   });
 });
 

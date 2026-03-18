@@ -30,6 +30,6 @@ describe('GET /api/health', () => {
     const res = await request(app).get('/api/health');
 
     expect(res.status).toBe(500);
-    expect(res.body).toMatchObject({ status: 'error', message: 'Service unavailable' });
+    expect(res.body).toMatchObject({ error: 'Service unavailable' });
   });
 });

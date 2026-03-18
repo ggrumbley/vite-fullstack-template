@@ -70,14 +70,23 @@ describe('POST /api/users', () => {
     expect(res.body).toMatchObject({ name: 'Alice', email: 'alice@example.com' });
   });
 
-  it('returns 400 when service throws', async () => {
+  it('returns 422 when body fails validation', async () => {
+    const res = await request(app)
+      .post('/api/users')
+      .send({ name: 'Alice', email: 'not-an-email', age: 30 });
+
+    expect(res.status).toBe(422);
+    expect(res.body).toHaveProperty('errors');
+  });
+
+  it('returns 500 when service throws', async () => {
     vi.mocked(userService.createUser).mockRejectedValue(new Error('Email already exists'));
 
     const res = await request(app)
       .post('/api/users')
-      .send({ name: 'Alice', email: 'duplicate@example.com', age: 30 });
+      .send({ name: 'Alice', email: 'alice@example.com', age: 30 });
 
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(500);
     expect(res.body).toMatchObject({ error: 'Email already exists' });
   });
 });
