@@ -1,8 +1,8 @@
 import express from 'express';
 
-import { checkHealth } from './controllers/health.controller.ts';
-import postRoutes from './routes/post.routes.ts';
-import userRoutes from './routes/user.routes.ts';
+import { checkHealth } from './features/health/health.controller.ts';
+import postRoutes from './features/posts/posts.routes.ts';
+import userRoutes from './features/users/users.routes.ts';
 
 export const app = express();
 

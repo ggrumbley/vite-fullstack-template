@@ -1,11 +1,11 @@
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { app } from '../app.ts';
+import { app } from '../../app.ts';
 
-vi.mock('../services/user.service.ts');
+vi.mock('./users.service.ts');
 
-import * as userService from '../services/user.service.ts';
+import * as userService from './users.service.ts';
 
 const mockUser = {
   id: 1,

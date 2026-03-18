@@ -1,14 +1,10 @@
-import { desc,eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 
-import { db } from '../db/db.ts';
-import { posts } from '../db/schema/posts.ts';
-import { users } from '../db/schema/users.ts';
+import { db } from '../../db/db.ts';
+import { posts } from '../../db/schema/posts.ts';
+import { users } from '../../db/schema/users.ts';
 
-export const createPost = async (data: {
-  title: string;
-  content: string;
-  userId: number;
-}) => {
+export const createPost = async (data: { title: string; content: string; userId: number }) => {
   const result = await db.insert(posts).values(data).returning();
   return result[0];
 };
@@ -33,15 +29,8 @@ export const getPostById = async (id: number) => {
   return result[0] || null;
 };
 
-export const updatePost = async (
-  id: number,
-  data: Partial<{ title: string; content: string }>,
-) => {
-  const result = await db
-    .update(posts)
-    .set(data)
-    .where(eq(posts.id, id))
-    .returning();
+export const updatePost = async (id: number, data: Partial<{ title: string; content: string }>) => {
+  const result = await db.update(posts).set(data).where(eq(posts.id, id)).returning();
   return result[0];
 };
 

@@ -1,8 +1,8 @@
 import { asc, count, eq, getTableColumns } from 'drizzle-orm';
 
-import { db } from '../db/db.ts';
-import { posts } from '../db/schema/posts.ts';
-import { users } from '../db/schema/users.ts';
+import { db } from '../../db/db.ts';
+import { posts } from '../../db/schema/posts.ts';
+import { users } from '../../db/schema/users.ts';
 
 export const getUsersWithPostCount = async (page: number, pageSize: number) => {
   return await db
@@ -18,11 +18,7 @@ export const getUsersWithPostCount = async (page: number, pageSize: number) => {
     .offset((page - 1) * pageSize);
 };
 
-export const createUser = async (data: {
-  name: string;
-  email: string;
-  age: number;
-}) => {
+export const createUser = async (data: { name: string; email: string; age: number }) => {
   const result = await db.insert(users).values(data).returning();
   return result[0];
 };

@@ -77,7 +77,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['packages/server/src/routes/**/*.ts', 'packages/server/src/db/seed.ts'],
+    files: ['packages/server/src/features/**/*.ts', 'packages/server/src/db/seed.ts'],
     rules: {
       'drizzle/enforce-delete-with-where': 'off',
     },

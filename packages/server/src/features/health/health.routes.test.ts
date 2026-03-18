@@ -1,11 +1,11 @@
 import request from 'supertest';
 import { describe, expect, it, vi } from 'vitest';
 
-import { app } from '../app.ts';
+import { app } from '../../app.ts';
 
-vi.mock('../services/health.service.ts');
+vi.mock('./health.service.ts');
 
-import * as healthService from '../services/health.service.ts';
+import * as healthService from './health.service.ts';
 
 const mockHealthData = {
   status: 'ok',
