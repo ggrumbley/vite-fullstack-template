@@ -1,19 +1,20 @@
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { app } from '../app.ts';
+import { app } from '../../app.ts';
+import { createAppError, ERROR_CODE } from '../../lib/appError.ts';
 
-vi.mock('../services/post.service.ts');
+vi.mock('./posts.service.ts');
 
-import * as postService from '../services/post.service.ts';
+import * as postService from './posts.service.ts';
 
 const mockPost = {
   id: 1,
   title: 'Test Post',
   content: 'Test content',
   userId: 1,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 const mockPostWithAuthor = {
@@ -21,7 +22,7 @@ const mockPostWithAuthor = {
   title: 'Test Post',
   content: 'Test content',
   author: 'Alice',
-  createdAt: new Date().toISOString(),
+  createdAt: new Date(),
 };
 
 beforeEach(() => vi.resetAllMocks());
@@ -43,7 +44,9 @@ describe('GET /api/posts', () => {
     const res = await request(app).get('/api/posts');
 
     expect(res.status).toBe(500);
-    expect(res.body).toMatchObject({ error: 'DB error' });
+    expect(res.body).toMatchObject({
+      error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
+    });
   });
 });
 
@@ -58,12 +61,14 @@ describe('GET /api/posts/:id', () => {
   });
 
   it('returns 404 when post does not exist', async () => {
-    vi.mocked(postService.getPostById).mockResolvedValue(null);
+    vi.mocked(postService.getPostById).mockRejectedValue(
+      createAppError(ERROR_CODE.NOT_FOUND, 'Post not found'),
+    );
 
     const res = await request(app).get('/api/posts/999');
 
     expect(res.status).toBe(404);
-    expect(res.body).toMatchObject({ error: 'Post not found' });
+    expect(res.body).toMatchObject({ error: { code: 'NOT_FOUND', message: 'Post not found' } });
   });
 });
 
@@ -79,15 +84,17 @@ describe('POST /api/posts', () => {
     expect(res.body).toMatchObject({ title: 'Test Post' });
   });
 
-  it('returns 400 when service throws', async () => {
-    vi.mocked(postService.createPost).mockRejectedValue(new Error('Validation failed'));
+  it('returns 422 when service throws', async () => {
+    vi.mocked(postService.createPost).mockRejectedValue(
+      createAppError(ERROR_CODE.VALIDATION_ERROR, 'Validation failed'),
+    );
 
-    const res = await request(app)
-      .post('/api/posts')
-      .send({ title: '', content: '', userId: 1 });
+    const res = await request(app).post('/api/posts').send({ title: '', content: '', userId: 1 });
 
-    expect(res.status).toBe(400);
-    expect(res.body).toMatchObject({ error: 'Validation failed' });
+    expect(res.status).toBe(422);
+    expect(res.body).toMatchObject({
+      error: { code: 'VALIDATION_ERROR', message: 'Validation failed' },
+    });
   });
 });
 
@@ -103,12 +110,14 @@ describe('PATCH /api/posts/:id', () => {
   });
 
   it('returns 404 when post does not exist', async () => {
-    vi.mocked(postService.updatePost).mockResolvedValue(undefined);
+    vi.mocked(postService.updatePost).mockRejectedValue(
+      createAppError(ERROR_CODE.NOT_FOUND, 'Post not found'),
+    );
 
     const res = await request(app).patch('/api/posts/999').send({ title: 'Updated Title' });
 
     expect(res.status).toBe(404);
-    expect(res.body).toMatchObject({ error: 'Post not found' });
+    expect(res.body).toMatchObject({ error: { code: 'NOT_FOUND', message: 'Post not found' } });
   });
 });
 
@@ -123,11 +132,13 @@ describe('DELETE /api/posts/:id', () => {
   });
 
   it('returns 404 when post does not exist', async () => {
-    vi.mocked(postService.deletePost).mockResolvedValue(undefined);
+    vi.mocked(postService.deletePost).mockRejectedValue(
+      createAppError(ERROR_CODE.NOT_FOUND, 'Post not found'),
+    );
 
     const res = await request(app).delete('/api/posts/999');
 
     expect(res.status).toBe(404);
-    expect(res.body).toMatchObject({ error: 'Post not found' });
+    expect(res.body).toMatchObject({ error: { code: 'NOT_FOUND', message: 'Post not found' } });
   });
 });

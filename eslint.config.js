@@ -1,6 +1,5 @@
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
-import drizzlePlugin from 'eslint-plugin-drizzle';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
@@ -63,23 +62,15 @@ export default tseslint.config(
     },
   },
 
-  // 4. Backend (Express + Drizzle)
+  // 4. Backend (Express)
   {
     files: ['packages/server/**/*.ts'],
     plugins: {
       security: securityPlugin,
-      drizzle: drizzlePlugin,
     },
     rules: {
       ...securityPlugin.configs.recommended.rules,
-      ...drizzlePlugin.configs.recommended.rules,
       'no-console': 'off',
-    },
-  },
-  {
-    files: ['packages/server/src/routes/**/*.ts', 'packages/server/src/db/seed.ts'],
-    rules: {
-      'drizzle/enforce-delete-with-where': 'off',
     },
   },
   {
