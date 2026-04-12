@@ -1,13 +1,9 @@
 import type { Request, Response } from 'express';
 
-import * as healthService from '../services/health.service.js';
+import { asyncHandler } from '../lib/asyncHandler.ts';
+import * as healthService from '../services/health.service.ts';
 
-export const checkHealth = async (_req: Request, res: Response) => {
-  try {
-    const data = await healthService.getHealthData();
-    res.json(data);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    res.status(500).json({ status: 'error', message });
-  }
-};
+export const checkHealth = asyncHandler(async (_req: Request, res: Response) => {
+  const data = await healthService.getHealthData();
+  res.json(data);
+});
