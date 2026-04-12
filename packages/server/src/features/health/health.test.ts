@@ -1,11 +1,11 @@
 import request from 'supertest';
 import { describe, expect, it, vi } from 'vitest';
 
-import { app } from '../app.ts';
+import { app } from '../../app.ts';
 
-vi.mock('../services/health.service.ts');
+vi.mock('./health.service.ts');
 
-import * as healthService from '../services/health.service.ts';
+import * as healthService from './health.service.ts';
 
 const mockHealthData = {
   status: 'ok',
@@ -30,6 +30,8 @@ describe('GET /api/health', () => {
     const res = await request(app).get('/api/health');
 
     expect(res.status).toBe(500);
-    expect(res.body).toMatchObject({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
+    expect(res.body).toMatchObject({
+      error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
+    });
   });
 });

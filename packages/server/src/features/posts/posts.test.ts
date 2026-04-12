@@ -1,20 +1,20 @@
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { app } from '../app.ts';
-import { createAppError, ERROR_CODE } from '../lib/appError.ts';
+import { app } from '../../app.ts';
+import { createAppError, ERROR_CODE } from '../../lib/appError.ts';
 
-vi.mock('../services/post.service.ts');
+vi.mock('./posts.service.ts');
 
-import * as postService from '../services/post.service.ts';
+import * as postService from './posts.service.ts';
 
 const mockPost = {
   id: 1,
   title: 'Test Post',
   content: 'Test content',
   userId: 1,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 const mockPostWithAuthor = {
@@ -22,7 +22,7 @@ const mockPostWithAuthor = {
   title: 'Test Post',
   content: 'Test content',
   author: 'Alice',
-  createdAt: new Date().toISOString(),
+  createdAt: new Date(),
 };
 
 beforeEach(() => vi.resetAllMocks());
@@ -44,7 +44,9 @@ describe('GET /api/posts', () => {
     const res = await request(app).get('/api/posts');
 
     expect(res.status).toBe(500);
-    expect(res.body).toMatchObject({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
+    expect(res.body).toMatchObject({
+      error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
+    });
   });
 });
 
@@ -87,12 +89,12 @@ describe('POST /api/posts', () => {
       createAppError(ERROR_CODE.VALIDATION_ERROR, 'Validation failed'),
     );
 
-    const res = await request(app)
-      .post('/api/posts')
-      .send({ title: '', content: '', userId: 1 });
+    const res = await request(app).post('/api/posts').send({ title: '', content: '', userId: 1 });
 
     expect(res.status).toBe(422);
-    expect(res.body).toMatchObject({ error: { code: 'VALIDATION_ERROR', message: 'Validation failed' } });
+    expect(res.body).toMatchObject({
+      error: { code: 'VALIDATION_ERROR', message: 'Validation failed' },
+    });
   });
 });
 

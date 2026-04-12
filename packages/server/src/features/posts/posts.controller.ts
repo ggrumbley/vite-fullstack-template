@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 
-import { asyncHandler } from '../lib/asyncHandler.ts';
-import * as postService from '../services/post.service.ts';
+import { asyncHandler } from '../../lib/asyncHandler.ts';
+import * as postService from './posts.service.ts';
 
 export const createNewPost = asyncHandler(async (req: Request, res: Response) => {
   const post = await postService.createPost(req.body);

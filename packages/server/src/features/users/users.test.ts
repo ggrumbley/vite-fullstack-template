@@ -1,12 +1,12 @@
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { app } from '../app.ts';
-import { createAppError, ERROR_CODE } from '../lib/appError.ts';
+import { app } from '../../app.ts';
+import { createAppError, ERROR_CODE } from '../../lib/appError.ts';
 
-vi.mock('../services/user.service.ts');
+vi.mock('./users.service.ts');
 
-import * as userService from '../services/user.service.ts';
+import * as userService from './users.service.ts';
 
 const mockUser = {
   id: 1,
@@ -55,7 +55,9 @@ describe('GET /api/users', () => {
     const res = await request(app).get('/api/users');
 
     expect(res.status).toBe(500);
-    expect(res.body).toMatchObject({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
+    expect(res.body).toMatchObject({
+      error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
+    });
   });
 });
 
@@ -81,6 +83,8 @@ describe('POST /api/users', () => {
       .send({ name: 'Alice', email: 'duplicate@example.com', age: 30 });
 
     expect(res.status).toBe(409);
-    expect(res.body).toMatchObject({ error: { code: 'CONFLICT', message: 'Email already exists' } });
+    expect(res.body).toMatchObject({
+      error: { code: 'CONFLICT', message: 'Email already exists' },
+    });
   });
 });
