@@ -1,67 +1,57 @@
 import 'dotenv/config';
 
-import { db } from './db.ts';
-import { posts } from './schema/posts.ts';
-import { users } from './schema/users.ts';
+import { end, getClient } from './index.ts';
 
 async function main() {
-  console.log('🌱 Starting database seeding...');
-
+  const client = await getClient();
   try {
-    // 1. Cleanup: Delete existing data (Postgres handles cascades if set up,
-    // but manual deletion ensures a clean slate for local testing).
-    await db.delete(posts);
-    await db.delete(users);
+    await client.query('BEGIN');
 
-    // 2. Insert Users
-    const newUsers = await db
-      .insert(users)
-      .values([
-        { name: 'Gary S.', email: 'gary.engineer@example.com', age: 46 },
-        { name: 'Elena Rodriguez', email: 'elena.r@example.com', age: 32 },
-        { name: 'Marcus Chen', email: 'm.chen@example.com', age: 28 },
-      ])
-      .returning();
+    await client.query('DELETE FROM posts');
+    await client.query('DELETE FROM users');
 
-    console.log(`✅ Inserted ${newUsers.length} users.`);
+    const { rows: newUsers } = await client.query(`
+      INSERT INTO users (name, email, age) VALUES
+        ('Gary S.', 'gary.engineer@example.com', 46),
+        ('Elena Rodriguez', 'elena.r@example.com', 32),
+        ('Marcus Chen', 'm.chen@example.com', 28)
+      RETURNING id
+    `);
 
-    // 3. Insert Posts
-    // We map posts to specific user IDs returned from the previous insert.
-    await db.insert(posts).values([
-      {
-        title: 'Balboa Park Trail Guide',
-        content:
-          'A deep dive into the technical sections and best times to avoid the crowds.',
-        userId: newUsers[0].id,
-      },
-      {
-        title: 'Dialing in the Perfect Espresso Shot',
-        content:
-          'Why your burr grinder settings matter more than the beans themselves.',
-        userId: newUsers[0].id,
-      },
-      {
-        title: 'The Rise of Signal-Focused Automations',
-        content:
-          'How bot APIs and high-value data scraping are creating new monetization moats.',
-        userId: newUsers[1].id,
-      },
-      // WILDCARD: Something outside the usual tech/outdoor interests
-      {
-        title: 'Beginner’s Guide to Urban Beekeeping',
-        content: 'How to maintain a healthy hive on a small city balcony.',
-        userId: newUsers[2].id,
-      },
-    ]);
+    await client.query(
+      `
+      INSERT INTO posts (title, content, user_id) VALUES
+        ($1, $2, $3),
+        ($4, $5, $6),
+        ($7, $8, $9),
+        ($10, $11, $12)
+    `,
+      [
+        'Balboa Park Trail Guide',
+        'A deep dive into the technical sections and best times to avoid the crowds.',
+        newUsers[0].id,
+        'Dialing in the Perfect Espresso Shot',
+        'Why your burr grinder settings matter more than the beans themselves.',
+        newUsers[0].id,
+        'The Rise of Signal-Focused Automations',
+        'How bot APIs and high-value data scraping are creating new monetization moats.',
+        newUsers[1].id,
+        "Beginner's Guide to Urban Beekeeping",
+        'How to maintain a healthy hive on a small city balcony.',
+        newUsers[2].id,
+      ],
+    );
 
-    console.log('✅ Inserted posts.');
-    console.log('🚀 Seeding finished successfully!');
-  } catch (error) {
-    console.error('❌ Seeding failed:', error);
+    await client.query('COMMIT');
+    console.log('Seeding finished successfully.');
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Seeding failed:', err);
     process.exit(1);
+  } finally {
+    client.release();
+    await end();
   }
-
-  process.exit(0);
 }
 
 main();
