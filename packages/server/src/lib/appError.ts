@@ -19,12 +19,16 @@ const STATUS_MAP = new Map<ErrorCode, number>([
   [ERROR_CODE.INTERNAL, 500],
 ]);
 
-export function createAppError(code: ErrorCode, message: string): Error {
+export type ErrorDetail = { field: string; message: string };
+
+export function createAppError(code: ErrorCode, message: string, details?: ErrorDetail[]): Error {
   const err = new Error(message) as Error & {
     statusCode: number;
     code: ErrorCode;
+    details?: ErrorDetail[];
   };
   err.statusCode = STATUS_MAP.get(code) ?? 500;
   err.code = code;
+  if (details) err.details = details;
   return err;
 }
