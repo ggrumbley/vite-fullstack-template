@@ -10,7 +10,10 @@ export function validate(
   return (req: Request, _res: Response, next: NextFunction) => {
     // Explicit branches avoid dynamic property access (security/detect-object-injection).
     // source is a closed union — every case is handled.
-    const incoming = source === 'body' ? req.body : source === 'params' ? req.params : req.query;
+    let incoming: unknown;
+    if (source === 'body') incoming = req.body;
+    else if (source === 'params') incoming = req.params;
+    else incoming = req.query;
 
     const result = schema.safeParse(incoming);
 
