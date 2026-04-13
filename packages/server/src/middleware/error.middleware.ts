@@ -12,5 +12,7 @@ export const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
 
   logger.error({ err, status, code, path: req.path, method: req.method }, message);
 
-  res.status(status).json({ error: { code, message } });
+  res
+    .status(status)
+    .json({ error: { code, message, ...(err.details && { details: err.details }) } });
 };
