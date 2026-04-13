@@ -23,10 +23,18 @@ export function validate(
       return;
     }
 
-    // Write parsed (and coerced) data back to the request
+    // Write parsed (and coerced) data back to the request.
+    // Express 5 defines req.query as a prototype getter, so direct assignment
+    // throws.
     if (source === 'body') req.body = result.data;
     else if (source === 'params') req.params = result.data as Request['params'];
-    else req.query = result.data as Request['query'];
+    else
+      Object.defineProperty(req, 'query', {
+        value: result.data,
+        writable: true,
+        configurable: true,
+        enumerable: true,
+      });
 
     next();
   };
