@@ -1,54 +1,6 @@
-# PERN Stack Template
+# Full Stack Template
 
 A full-stack TypeScript template using React, Express, and PostgreSQL. Structured for real-world patterns: feature-based server organization, raw SQL via `node-postgres`, structured logging with Pino, and schema migrations with `node-pg-migrate`.
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React 19 + Vite |
-| Backend | Node.js + Express 5 |
-| Language | TypeScript (strict, ESM throughout) |
-| Database | PostgreSQL — raw SQL via `node-postgres` |
-| Migrations | `node-pg-migrate` |
-| Logging | Pino + pino-http |
-| Package Manager | pnpm workspaces |
-| Dev Runtime | tsx (ESM-native TypeScript execution) |
-
----
-
-## Project Structure
-
-```
-vite-fullstack-template/
-├── packages/
-│   ├── client/                    # React + Vite frontend
-│   └── server/                    # Express backend
-│       └── src/
-│           ├── features/          # Feature-based modules
-│           │   ├── posts/         # posts.controller, .routes, .service, .test
-│           │   ├── users/         # users.controller, .routes, .service, .test
-│           │   └── health/        # health.controller, .routes, .service, .test
-│           ├── db/
-│           │   ├── index.ts       # pg.Pool (private) + query/getClient/end exports
-│           │   ├── types.ts       # TypeScript interfaces for DB entities
-│           │   ├── seed.ts        # Dev data seed script
-│           │   ├── migrations/    # node-pg-migrate SQL migration files
-│           │   └── repositories/  # Raw SQL per domain (posts, users)
-│           ├── lib/
-│           │   ├── appError.ts    # createAppError factory + ERROR_CODE
-│           │   ├── asyncHandler.ts
-│           │   └── logger.ts      # Pino singleton
-│           ├── middleware/
-│           │   └── error.middleware.ts
-│           ├── app.ts
-│           └── index.ts
-├── docker-compose.yml
-├── pnpm-workspace.yaml
-└── package.json
-```
-
----
 
 ## Getting Started
 
@@ -89,7 +41,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/local_db
 **Local (Docker):**
 
 ```bash
-pnpm db:up
+pnpm --filter server db:up
 ```
 
 This starts a Postgres container using the credentials in `docker-compose.yml`. Data is persisted in a Docker volume between restarts.
@@ -101,7 +53,7 @@ Skip this step. Set `DATABASE_URL` in your `.env` to your Neon connection string
 ### 4. Run migrations
 
 ```bash
-pnpm db:migrate
+pnpm --filter server db:migrate
 ```
 
 Runs all pending migration files from `packages/server/src/db/migrations/` in order. Creates tables from scratch on a fresh database. `node-pg-migrate` tracks which migrations have run in a `pgmigrations` table.
@@ -109,7 +61,7 @@ Runs all pending migration files from `packages/server/src/db/migrations/` in or
 ### 5. Seed the database
 
 ```bash
-pnpm db:seed
+pnpm --filter server db:seed
 ```
 
 Populates the database with development data (users and posts).
@@ -130,26 +82,74 @@ The Vite dev server proxies all `/api/*` requests to the Express backend — no 
 
 ---
 
+## Tech Stack
+
+| Layer           | Technology                               |
+| --------------- | ---------------------------------------- |
+| Frontend        | React 19 + Vite                          |
+| Backend         | Node.js + Express 5                      |
+| Language        | TypeScript (strict, ESM throughout)      |
+| Database        | PostgreSQL — raw SQL via `node-postgres` |
+| Migrations      | `node-pg-migrate`                        |
+| Logging         | Pino + pino-http                         |
+| Package Manager | pnpm workspaces                          |
+| Dev Runtime     | tsx (ESM-native TypeScript execution)    |
+
+---
+
+## Project Structure
+
+```
+vite-fullstack-template/
+├── packages/
+│   ├── client/                    # React + Vite frontend
+│   └── server/                    # Express backend
+│       └── src/
+│           ├── features/          # Feature-based modules
+│           │   ├── posts/         # posts.controller, .routes, .service, .test
+│           │   ├── users/         # users.controller, .routes, .service, .test
+│           │   └── health/        # health.controller, .routes, .service, .test
+│           ├── db/
+│           │   ├── index.ts       # pg.Pool (private) + query/getClient/end exports
+│           │   ├── types.ts       # TypeScript interfaces for DB entities
+│           │   ├── seed.ts        # Dev data seed script
+│           │   ├── migrations/    # node-pg-migrate SQL migration files
+│           │   └── repositories/  # Raw SQL per domain (posts, users)
+│           ├── lib/
+│           │   ├── appError.ts    # createAppError factory + ERROR_CODE
+│           │   ├── asyncHandler.ts
+│           │   └── logger.ts      # Pino singleton
+│           ├── middleware/
+│           │   └── error.middleware.ts
+│           ├── app.ts
+│           └── index.ts
+├── docker-compose.yml
+├── pnpm-workspace.yaml
+└── package.json
+```
+
+---
+
 ## Database Commands
 
-All database scripts are run from the root of the project with pnpm:
+Database scripts live in the `server` workspace. Invoke them from the repo root with `pnpm --filter server`:
 
-| Command | Description |
-|---|---|
-| `pnpm db:up` | Start local Postgres container |
-| `pnpm db:down` | Stop and remove local Postgres container |
-| `pnpm db:migrate` | Run all pending migrations |
-| `pnpm db:migrate:create <name>` | Generate a new migration file |
-| `pnpm db:migrate:down` | Roll back the most recent migration |
-| `pnpm db:seed` | Seed the database with dev data |
-| `pnpm db:reset` | Run migrations + seed (full rebuild) |
+| Command                                         | Description                              |
+| ----------------------------------------------- | ---------------------------------------- |
+| `pnpm --filter server db:up`                    | Start local Postgres container           |
+| `pnpm --filter server db:down`                  | Stop and remove local Postgres container |
+| `pnpm --filter server db:migrate`               | Run all pending migrations               |
+| `pnpm --filter server db:migrate:create <name>` | Generate a new migration file            |
+| `pnpm --filter server db:migrate:down`          | Roll back the most recent migration      |
+| `pnpm --filter server db:seed`                  | Seed the database with dev data          |
+| `pnpm --filter server db:reset`                 | Run migrations + seed (full rebuild)     |
 
 ### Fresh database reset
 
 To nuke the database and start clean — useful during development or when onboarding:
 
 ```bash
-pnpm db:down && pnpm db:up && pnpm db:reset
+pnpm --filter server db:down && pnpm --filter server db:up && pnpm --filter server db:reset
 ```
 
 ### Adding a migration
@@ -157,23 +157,23 @@ pnpm db:down && pnpm db:up && pnpm db:reset
 When the schema needs to change, generate a new migration file:
 
 ```bash
-pnpm db:migrate:create add-tags-to-posts
+pnpm --filter server db:migrate:create add-tags-to-posts
 ```
 
-This creates a timestamped file in `packages/server/src/db/migrations/`. Fill in `up` (apply) and `down` (rollback), then run `pnpm db:migrate`.
+This creates a timestamped `.sql` file in `packages/server/src/db/migrations/` with `-- Up Migration` and `-- Down Migration` markers. Fill in the SQL under each marker, then run `pnpm --filter server db:migrate`.
 
 ---
 
 ## Root Scripts
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Start client + server concurrently |
-| `pnpm build` | Build client + server for production |
-| `pnpm test` | Run all tests (client + server) |
-| `pnpm tsc` | Type-check client + server |
-| `pnpm lint` | Lint the entire project |
-| `pnpm format` | Format with Prettier |
+| Command       | Description                          |
+| ------------- | ------------------------------------ |
+| `pnpm dev`    | Start client + server concurrently   |
+| `pnpm build`  | Build client + server for production |
+| `pnpm test`   | Run all tests (client + server)      |
+| `pnpm tsc`    | Type-check client + server           |
+| `pnpm lint`   | Lint the entire project              |
+| `pnpm format` | Format with Prettier                 |
 
 ---
 
@@ -190,9 +190,9 @@ Queries are written in plain SQL using parameterized `$1, $2` syntax. No ORM. Ea
 The `db/index.ts` module keeps the `pg.Pool` private and exposes three functions:
 
 ```ts
-query(text, params)   // for standard queries
-getClient()           // for transactions
-end()                 // for graceful shutdown in scripts
+query(text, params); // for standard queries
+getClient(); // for transactions
+end(); // for graceful shutdown in scripts
 ```
 
 This gives a single place to add cross-cutting concerns — slow query logging, metrics, tracing — without touching individual repositories.
@@ -225,9 +225,9 @@ Tests use Vitest with Supertest for HTTP integration tests.
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|---|---|---|
-| `DATABASE_URL` | Yes | Postgres connection string |
-| `PORT` | No | Server port (default: `5001`) |
-| `NODE_ENV` | No | `development` or `production` |
-| `LOG_LEVEL` | No | Pino log level (default: `info`) |
+| Variable       | Required | Description                      |
+| -------------- | -------- | -------------------------------- |
+| `DATABASE_URL` | Yes      | Postgres connection string       |
+| `PORT`         | No       | Server port (default: `5001`)    |
+| `NODE_ENV`     | No       | `development` or `production`    |
+| `LOG_LEVEL`    | No       | Pino log level (default: `info`) |
